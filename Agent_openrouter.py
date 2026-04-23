@@ -12,10 +12,10 @@ client = OpenAI(
 )
 
 # 初始化 AI
-# messages = [{"role": "system", "content": """你的目標是完成用戶指定的任務，你只能以以下其中一種格式，且語言為繁體中文回答，沒有例外：
-# 1. 若你認為需要執行指令，輸出「命令: XXX」，XXX為你認為需要執行的指令，且不輸出其他文字。
-# 2. 若你認為不用執行指令了，輸出「完成: XXX」，XXX為此次對話你的總結。"""}]
-messages = []
+with open("system_prompt.md", "r", encoding="utf-8") as f:
+    system_prompt = f.read()
+
+messages = [{"role": "system", "content": system_prompt}]
 
 while True:
   user_input = input("【你】")
@@ -27,7 +27,7 @@ while True:
 
   # 2. 呼叫大模型
   response = client.chat.completions.create(
-    model="google/gemma-4-26b-a4b-it:free", 
+    model="inclusionai/ling-2.6-flash:free", 
     messages=messages
   )
   print("大模型呼叫成功")
