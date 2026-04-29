@@ -50,11 +50,12 @@ def execute_system_command(reply):
         command_result = process.stdout.strip()
         if process.stderr.strip():
             command_result = (command_result + "\n" + process.stderr.strip()).strip()
-            
-        console.print(f"[[dim]Agent -> 系統[/dim]] 執行命令: {command}")
-        console.print(f"[[dim]系統 -> Agent[/dim]] {command_result if command_result else '無輸出/無報錯'}")
         
-        return f"已執行 LLM 後的系統回傳結果 (無則為無報錯):\n{command_result}"
+        command_output = f"執行命令結果 (無則為無報錯): {command_result}"
+        console.print(f"[[dim]BASH[/dim]] {command_result}")
+        console.print(f"[[dim]Agent -> AI[/dim]] {command_output}")
+        
+        return command_output
     except IndexError:
         error_msg = "系統回傳: 無法解析命令，請確認格式是否包含 '命令:'"
         console.print(f"[[red]系統 -> Agent[/red]] {error_msg}")
@@ -75,7 +76,7 @@ def main():
         messages.append({"role": "user", "content": user_input})
 
         console.print("\n[dim]─────────────────────────────────────────────────────────────────────────────────────────────────[/dim]")
-        console.print(f"[[white]Agent -> AI[/white]] {user_input}")
+        console.print(f"[[white]Agent -> AI[/white]] {user_input} (+ 系統提示詞)")
 
         # Agent 內部思考/執行循環
         while True:
@@ -88,7 +89,7 @@ def main():
             if reply.strip().startswith("完成:"):
                 break
 
-            # 執行命令並將結果加入對話歷史
+            # 若是 "命令: " 開頭，執行命令並將執行結果加入對話歷史
             command_output = execute_system_command(reply)
             messages.append({"role": "user", "content": command_output})
 
