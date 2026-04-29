@@ -25,16 +25,22 @@ while True:
 
   messages.append({"role": "user", "content": user_input})
 
-  # 2. 呼叫大模型
-  response = client.chat.completions.create(
-    model="google/gemma-4-31b-it:free", 
-    messages=messages
-  )
-  print("大模型呼叫成功")
-  
-  reply = response.choices[0].message.content
-  messages.append({"role": "assistant", "content": reply})
+  while True:
+    # 2. 呼叫大模型
+    response = client.chat.completions.create(
+      model="inclusionai/ling-2.6-1t:free", 
+      messages=messages
+    )
+    print("大模型呼叫成功")
+    
+    reply = response.choices[0].message.content
+    messages.append({"role": "assistant", "content": reply})
 
-  # 3. 印出大模型的回覆
-  print(f"【AI】{reply}")
-  # print(f"所有歷程對話: {messages}")
+    # 3. 印出大模型的回覆
+    print(f"【AI】{reply}")
+    # print(f"所有歷程對話: {messages}")
+
+    # 4. 判斷是否需要繼續
+    if reply.startswith("完成:"):
+      print("任務完成，結束對話")
+      break

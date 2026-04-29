@@ -1,8 +1,14 @@
 # 忽略環境變數設定檔，避免上傳到 GitHub 使密碼外洩
 .env
 
+# 忽略python虛擬環境
 .venv/
 venv/
 
+# 忽略python快取檔案
 __pycache__/
 *.pyc
+
+*.txt
+*.png
+*.jpg
