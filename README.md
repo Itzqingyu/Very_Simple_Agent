@@ -1,67 +1,78 @@
 # Very Simple Agent
----
-這是一個以 Python 實作的輕量化、漸進式 AI Agent 專案。
-專案展示了如何從最基礎的 API 呼叫，一步一步進階到擁有精美 CLI 介面、且具備本機命令列操作能力的自主 Agent。
+[English](README.md) | [繁體中文](README.zh-TW.md)
 
-## ✨ 核心功能
 ---
-*   **漸進式學習架構**：從 `Agent1.py` 到 `Agent4.py`，展示了 Agent 功能的迭代過程。
-*   **本機系統命令執行**：Agent 能夠解析對話意圖，產生並透過 `subprocess` 執行本機終端機 (bash/cmd) 指令，並能捕捉正確輸出與系統報錯，實現與本機環境的真實互動。
-*   **精美的 CLI 介面**：使用 `rich` 套件打造了終端機下的高質感互動介面，包含提示面板、顏色標註與分隔線。
-*   **提示詞外置**：系統提示詞（System Prompt）獨立存放在 `system_prompt.md`，方便隨時調整 Agent 角色設定與行為準則。
-*   **多模型支援**：除了支援官方 OpenAI API，也提供 `Agent_openrouter.py` 示範如何串接 OpenRouter 以使用其他開源模型（如 Gemma 等）。
+This is a lightweight, progressive AI Agent project implemented in Python.
+The project demonstrates how to evolve from a basic API call to an autonomous Agent with a beautiful CLI interface and the ability to execute local command-line operations step by step.
 
-## 🗂️ 專案結構與版本歷史
+## ✨ Core Features
 ---
-本專案經歷了數次重要的版本迭代（參考 Git Log）：
-1. **初始化與基礎串接**：建立基礎目錄、設置 `.gitignore`，完成基本的 OpenAI 與 OpenRouter 串接。
-2. **重構系統提示詞**：將原本寫死在程式碼中的 prompt 獨立抽出至 `system_prompt.md`。
-3. **優化 CLI 與系統互動機制**：在最新版的腳本中重構了程式結構，加入 `rich` 介面，並且完善了系統指令執行與報錯（`stderr`）捕捉機制。
-4. **漸進式功能整合**：拆分為 `Agent1.py` ~ `Agent4.py`，完整記錄功能的演進。
+*   **Progressive Learning Architecture**: From `Agent1.py` to `Agent5.py`, demonstrating the iterative process of Agent functionalities.
+*   **Local System Command Execution**: The Agent can parse conversational intents, generate and execute local terminal (bash/cmd) commands via `subprocess`, and capture correct outputs and system errors, achieving real interaction with the local environment.
+*   **Beautiful CLI Interface**: Uses the `rich` library to build a high-quality interactive interface in the terminal, including prompt panels, color highlights, and separators.
+*   **Token & Cost Tracking**: Features token consumption recording and API cost calculation (`Agent5.py`).
+*   **Externalized Prompts**: The System Prompt is stored independently in `system_prompt.md`, making it easy to adjust the Agent's role settings and behavioral guidelines at any time.
+*   **Multi-Model Support**: In addition to supporting the official OpenAI API, `Agent_openrouter.py` provides an example of how to connect to OpenRouter to use other open-source models (like Gemma, etc.).
 
-## 🛠️ 環境依賴
+## 🗂️ Project Structure & Version History
 ---
-請確保你的環境安裝了 Python 3，並安裝以下第三方套件：
-*   `openai` - 用於呼叫 OpenAI 官方或相容規格之 API
-*   `python-dotenv` - 用於安全地讀取 `.env` 中的環境變數
-*   `rich` - 用於繪製終端機內的精美 UI 與顏色
+This project has gone through several important version iterations (refer to the Git Log):
+1. **Initialization & Basic Connection**: Created the base directory, set up `.gitignore`, and completed basic OpenAI and OpenRouter connections.
+2. **Refactoring System Prompt**: Extracted the hardcoded prompt from the code into an independent `system_prompt.md`.
+3. **Optimizing CLI & System Interaction**: Refactored the code structure in the latest scripts, added the `rich` interface, and improved the system command execution and error (`stderr`) capturing mechanisms.
+4. **Progressive Feature Integration**: Split into `Agent1.py` ~ `Agent5.py` to fully record the evolution of features.
 
-**快速安裝指令：**
+### 🕵️ Agent Evolution Analysis
+*   **`Agent1.py`**: The most basic connection. Reads the key from `.env` and uses `gpt-4o-mini` for a Q&A conversation loop.
+*   **`Agent2.py`**: Adds **System Prompt**. Reads `system_prompt.md` to assign a role and adds logic to end the conversation upon detecting `完成:` (Done:).
+*   **`Agent3.py`**: Has **Local System Command Execution** capabilities. Parses `命令: <command>` from the LLM's reply, executes the command locally via `subprocess`, and returns the result to the LLM for further thinking.
+*   **`Agent4.py`**: **CLI Interface Beautification & Refactoring**. Introduces the `rich` library for a high-quality interface and modularizes code logic into functions.
+*   **`Agent5.py`**: **Token & Cost Tracking**. Adds the `TokenTracker` to calculate and display token consumption and corresponding estimated costs per round and in total.
+*   **`Agent_openrouter.py`**: **Multi-Model Support**. Demonstrates calling other open-source models (e.g., `gemma-4-31b-it:free`) via OpenRouter.
+
+## 🛠️ Environment Dependencies
+---
+This project uses `uv` for package and virtual environment management, and has built-in `pyproject.toml` and `uv.lock`.
+Please ensure that `uv` is installed on your system.
+
+**One-Click Environment & Dependency Installation:**
 ```bash
-pip install openai python-dotenv rich
+uv sync
 ```
+*After running this command, `uv` will automatically read the lock file, create a `.venv` virtual environment for you, and install all required packages.*
 
-## 🚀 部署與執行教學
+## 🚀 Deployment & Execution Guide
 ---
-### 1. 取得程式碼
-將此專案 Clone 或下載到你的本機環境中：
+### 1. Get the Code
+Clone or download this project to your local environment:
 ```bash
-git clone <你的儲存庫網址>
+git clone <your-repository-url>
 cd Very_Simple_Agent
 ```
 
-### 2. 設定環境變數 (.env)
-在專案根目錄建立一個 `.env` 檔案，並填入你的 API Key。這份檔案已經被設定在 `.gitignore` 中，因此不會被上傳到 GitHub，可確保密碼安全。
+### 2. Set Environment Variables (.env)
+Create an `.env` file in the root directory of the project and fill in your API Keys. This file is already set in `.gitignore`, so it will not be uploaded to GitHub, ensuring password security.
 
-在 `.env` 中加入以下內容：
+Add the following content to `.env`:
 ```env
-# OpenAI 金鑰 (Agent1~4 使用)
-OPENAI_API_KEY=sk-你的OpenAI金鑰填這裡
+# OpenAI Key (used by Agent1~5)
+OPENAI_API_KEY=sk-your-openai-key-here
 
-# OpenRouter 金鑰 (Agent_openrouter.py 使用)
-OPENROUTER_API_KEY=sk-or-你的OpenRouter金鑰填這裡
+# OpenRouter Key (used by Agent_openrouter.py)
+OPENROUTER_API_KEY=sk-or-your-openrouter-key-here
 ```
 
-### 3. 自訂系統提示詞 (選項)
-你可以開啟 `system_prompt.md` 自由修改 Agent 的角色設定與規則。
+### 3. Customize System Prompt (Optional)
+You can open `system_prompt.md` to freely modify the Agent's role settings and rules.
 
-### 4. 執行 Agent
-你可以從 `Agent4.py` 也就是功能最完整的版本開始體驗。
-在終端機輸入：
+### 4. Execute the Agent
+You can start experiencing it from `Agent5.py`, which is currently the most complete version.
+Because the project is configured with `uv`, you can execute it with one click using the following command, and `uv` will automatically ensure it runs in the virtual environment:
 ```bash
-python Agent4.py
+uv run Agents/Agent5.py
 ```
+*(Please make sure to run this command in the project root directory)*
 
-進入對話後，你會看到精美的啟動面板與 `>>` 提示字元。
-*   輸入你想問的問題或想請它代勞的本機操作指令。
-*   若要離開對話，請輸入 `exit`。
+After entering the conversation, you will see a beautiful startup panel and the `>>` prompt.
+*   Enter the question you want to ask or the local operation command you want it to perform for you.
+*   To exit the conversation, enter `exit`.

@@ -9,7 +9,21 @@ venv/
 __pycache__/
 *.pyc
 
+work_plan/
 .vscode
 *.txt
 *.png
 *.jpg
+
+# 避免未來建立其他環境變數檔被意外上傳
+.env.*
+
+# 常見的日誌檔
+*.log
+
+# 作業系統自動產生的快取檔
+.DS_Store
+Thumbs.db
+
+# 如用 PyCharm 開發
+.idea/
