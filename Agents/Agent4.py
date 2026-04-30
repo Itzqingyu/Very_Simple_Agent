@@ -61,6 +61,8 @@ def execute_system_command(reply):
         console.print(f"[[red]系統 -> Agent[/red]] {error_msg}")
         return error_msg
 
+# ---------- main ----------
+
 def main():
     client, messages = init_agent()
     print_welcome_panel()
