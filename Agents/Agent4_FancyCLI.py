@@ -1,4 +1,4 @@
-from openai import OpenAI
+from litellm import completion
 import os
 import subprocess
 from dotenv import load_dotenv
@@ -9,18 +9,14 @@ from rich.panel import Panel
 console = Console()
 
 def init_agent():
-    """初始化環境變數、OpenAI 客戶端與系統提示詞"""
+    """初始化環境變數與系統提示詞"""
     load_dotenv()
-    
-    client = OpenAI(
-        api_key=os.getenv("OPENAI_API_KEY"),
-    )
     
     with open("system_prompt.md", "r", encoding="utf-8") as f:
         system_prompt = f.read()
         
     messages = [{"role": "system", "content": system_prompt}]
-    return client, messages
+    return messages
 
 def print_welcome_panel():
     """顯示頂部的狀態資訊面板"""
@@ -30,9 +26,9 @@ def print_welcome_panel():
     )
     console.print(Panel(info_text, title="✦ Agent 小助手 ✦", border_style="dim", expand=False))
 
-def call_llm(client, messages):
+def call_llm(messages):
     """呼叫大語言模型並回傳結果"""
-    response = client.chat.completions.create(
+    response = completion(
         model="gpt-4o-mini", 
         messages=messages
     )
@@ -64,7 +60,7 @@ def execute_system_command(reply):
 # ---------- main ----------
 
 def main():
-    client, messages = init_agent()
+    messages = init_agent()
     print_welcome_panel()
 
     # 主對話循環
@@ -82,7 +78,7 @@ def main():
 
         # Agent 內部思考/執行循環
         while True:
-            reply = call_llm(client, messages)
+            reply = call_llm(messages)
             messages.append({"role": "assistant", "content": reply})
 
             # 印出大模型的回覆

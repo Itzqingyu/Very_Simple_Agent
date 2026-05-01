@@ -1,19 +1,11 @@
-from openai import OpenAI
-import os
+from litellm import completion
 import subprocess
 from dotenv import load_dotenv
 
-# 初始化 (讀取 KEY、指定 client、載入 system_prompt)
-
+# 初始化 (讀取 KEY、載入 system_prompt)
 load_dotenv()
-
-client = OpenAI(
-  api_key=os.getenv("OPENAI_API_KEY"),
-)
-
 with open("system_prompt.md", "r", encoding="utf-8") as f:
     system_prompt = f.read()
-
 messages = [{"role": "system", "content": system_prompt}]
 
 # 對話循環
@@ -21,13 +13,12 @@ while True:
   user_input = input("\n>> ")
   if user_input.lower() == "exit":
     break
-
   messages.append({"role": "user", "content": user_input})
 
   print("-------------------- Agent 循環開始 --------------------")
   while True:
     # 呼叫大模型
-    response = client.chat.completions.create(
+    response = completion(
       model="gpt-4o-mini", 
       messages=messages
     )
