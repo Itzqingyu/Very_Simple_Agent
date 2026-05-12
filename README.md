@@ -20,14 +20,15 @@ This project has gone through several important version iterations (refer to the
 1. **Initialization & Basic Connection**: Created the base directory, set up `.gitignore`, and completed basic OpenAI and OpenRouter connections.
 2. **Refactoring System Prompt**: Extracted the hardcoded prompt from the code into an independent `system_prompt.md`.
 3. **Optimizing CLI & System Interaction**: Refactored the code structure in the latest scripts, added the `rich` interface, and improved the system command execution and error (`stderr`) capturing mechanisms.
-4. **Progressive Feature Integration**: Split into `Agent1.py` ~ `Agent5.py` to fully record the evolution of features.
+4. **Progressive Feature Integration**: Split into `Agent1_Basic.py` ~ `Agent5_TokenCount.py` to fully record the evolution of features.
 
 ### 🕵️ Agent Evolution Analysis
-*   **`Agent1.py`**: The most basic connection. Reads the key from `.env` and uses `gpt-4o-mini` for a Q&A conversation loop.
-*   **`Agent2.py`**: Adds **System Prompt**. Reads `system_prompt.md` to assign a role and adds logic to end the conversation upon detecting `完成:` (Done:).
-*   **`Agent3.py`**: Has **Local System Command Execution** capabilities. Parses `命令: <command>` from the LLM's reply, executes the command locally via `subprocess`, and returns the result to the LLM for further thinking.
-*   **`Agent4.py`**: **CLI Interface Beautification & Refactoring**. Introduces the `rich` library for a high-quality interface and modularizes code logic into functions.
-*   **`Agent5.py`**: **Token & Cost Tracking**. Adds the `TokenTracker` to calculate and display token consumption and corresponding estimated costs per round and in total.
+*   **`Agent1_Basic.py`**: The most basic connection. Reads the key from `.env` and uses `gpt-4o-mini` for a Q&A conversation loop. Agent1 ~ 5 depend on `litellm` package.
+*   **`Agent2_SysPrompt.py`**: Adds **System Prompt**. Reads `system_prompt.md` to assign a role and adds logic to end the conversation upon detecting `完成:` (Done:).
+*   **`Agent3_AgentLoop.py`**: Has **Local System Command Execution** capabilities. Parses `命令: <command>` from the LLM's reply, executes the command locally via `subprocess`, and returns the result to the LLM for further thinking.
+*   **`Agent4_FancyCLI.py`**: **CLI Interface Beautification & Refactoring**. Introduces the `rich` library for a high-quality interface and modularizes code logic into functions.
+*   **`Agent5_TokenCount.py`**: **Token & Cost Tracking**. Adds the `TokenTracker` to calculate and display token consumption and corresponding estimated costs per round and in total.
+*   **`Agent_openaiSDK.py`**: **Native OpenAI SDK Implementation**. Similar to Agent 5, but demonstrates calling the models using the official OpenAI SDK instead of `litellm`.
 *   **`Agent_openrouter.py`**: **Multi-Model Support**. Demonstrates calling other open-source models (e.g., `gemma-4-31b-it:free`) via OpenRouter.
 
 ## 🛠️ Environment Dependencies
@@ -46,7 +47,7 @@ uv sync
 ### 1. Get the Code
 Clone or download this project to your local environment:
 ```bash
-git clone <your-repository-url>
+git clone <this-repository-url>
 cd Very_Simple_Agent
 ```
 
@@ -58,6 +59,9 @@ Add the following content to `.env`:
 # OpenAI Key (used by Agent1~5)
 OPENAI_API_KEY=sk-your-openai-key-here
 
+# Gemini Key (used by Agent1~5, you can change the LLM model if you want)
+OPENAI_API_KEY=sk-your-openai-key-here
+
 # OpenRouter Key (used by Agent_openrouter.py)
 OPENROUTER_API_KEY=sk-or-your-openrouter-key-here
 ```
@@ -66,10 +70,10 @@ OPENROUTER_API_KEY=sk-or-your-openrouter-key-here
 You can open `system_prompt.md` to freely modify the Agent's role settings and rules.
 
 ### 4. Execute the Agent
-You can start experiencing it from `Agent5.py`, which is currently the most complete version.
+You can start experiencing it from `Agent5_TokenCount.py`, which is currently the most complete version.
 Because the project is configured with `uv`, you can execute it with one click using the following command, and `uv` will automatically ensure it runs in the virtual environment:
 ```bash
-uv run Agents/Agent5.py
+uv run Agents/Agent5_TokenCount.py
 ```
 *(Please make sure to run this command in the project root directory)*
 

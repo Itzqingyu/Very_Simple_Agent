@@ -20,14 +20,15 @@
 1. **初始化與基礎串接**：建立基礎目錄、設置 `.gitignore`，完成基本的 OpenAI 與 OpenRouter 串接。
 2. **重構系統提示詞**：將原本寫死在程式碼中的 prompt 獨立抽出至 `system_prompt.md`。
 3. **優化 CLI 與系統互動機制**：在最新版的腳本中重構了程式結構，加入 `rich` 介面，並且完善了系統指令執行與報錯（`stderr`）捕捉機制。
-4. **漸進式功能整合**：拆分為 `Agent1.py` ~ `Agent5.py`，完整記錄功能的演進。
+4. **漸進式功能整合**：拆分為 `Agent1_Basic.py` ~ `Agent5_TokenCount.py`，完整記錄功能的演進。
 
 ### 🕵️ Agent 演進分析
-*   **`Agent1.py`**: 最基礎的串接。讀取 `.env` 金鑰，使用 `gpt-4o-mini` 進行一問一答對話。
-*   **`Agent2.py`**: 加入**系統提示詞**。讀取 `system_prompt.md` 賦予角色設定，加入判斷 `完成:` 結束對話的邏輯。
-*   **`Agent3.py`**: 具備**本機系統命令執行**能力。解析 LLM 回覆中的 `命令: <command>`，透過 `subprocess` 在本機執行指令並回傳結果給 LLM 繼續思考。
-*   **`Agent4.py`**: **CLI 介面美化與重構**。引入 `rich` 套件打造高質感介面，程式邏輯模組化拆分為函式。
-*   **`Agent5.py`**: **Token 與費用追蹤**。加入 `TokenTracker`，計算並顯示每輪與總計的 Token 消耗及對應的預估花費。
+*   **`Agent1_Basic.py`**: 最基礎的串接。讀取 `.env` 金鑰，使用 `gpt-4o-mini` 進行一問一答對話。使用 `litellm` 套件 (Agent1 ~ 5)。
+*   **`Agent2_SysPrompt.py`**: 加入**系統提示詞**。讀取 `system_prompt.md` 賦予角色設定，加入判斷 `完成:` 結束對話的邏輯。
+*   **`Agent3_AgentLoop.py`**: 具備**本機系統命令執行**能力。解析 LLM 回覆中的 `命令: <command>`，透過 `subprocess` 在本機執行指令並回傳結果給 LLM 繼續思考。
+*   **`Agent4_FancyCLI.py`**: **CLI 介面美化與重構**。引入 `rich` 套件打造高質感介面，程式邏輯模組化拆分為函式。
+*   **`Agent5_TokenCount.py`**: **Token 與費用追蹤**。加入 `TokenTracker`，計算並顯示每輪與總計的 Token 消耗及對應的預估花費。
+*   **`Agent_openaiSDK.py`**: **原生 OpenAI SDK 實作**。功能與 Agent 5 類似，但示範如何使用官方 OpenAI SDK 直接呼叫模型，而非透過 `litellm`。
 *   **`Agent_openrouter.py`**: **多模型支援**。示範透過 OpenRouter 呼叫其他開源模型 (如 `gemma-4-31b-it:free`)。
 
 ## 🛠️ 環境依賴
@@ -46,7 +47,7 @@ uv sync
 ### 1. 取得程式碼
 將此專案 Clone 或下載到你的本機環境中：
 ```bash
-git clone <你的儲存庫網址>
+git clone <此庫網址>
 cd Very_Simple_Agent
 ```
 
@@ -55,8 +56,11 @@ cd Very_Simple_Agent
 
 在 `.env` 中加入以下內容：
 ```env
-# OpenAI 金鑰 (Agent1~4 使用)
+# OpenAI 金鑰 (Agent1~5 使用)
 OPENAI_API_KEY=sk-你的OpenAI金鑰填這裡
+
+# GEMINI 金鑰 (Agent1~5 使用，需自行替換模型)
+GEMINI_API_KEY=你的Gemini金鑰填這裡
 
 # OpenRouter 金鑰 (Agent_openrouter.py 使用)
 OPENROUTER_API_KEY=sk-or-你的OpenRouter金鑰填這裡
@@ -66,10 +70,10 @@ OPENROUTER_API_KEY=sk-or-你的OpenRouter金鑰填這裡
 你可以開啟 `system_prompt.md` 自由修改 Agent 的角色設定與規則。
 
 ### 4. 執行 Agent
-你可以從 `Agent5.py` 也就是目前功能最完整的版本開始體驗。
+你可以從 `Agent5_TokenCount.py` 也就是目前功能最完整的版本開始體驗。
 因為專案有配置 `uv`，你可以直接透過以下指令一鍵執行，`uv` 會自動確保在虛擬環境中運行：
 ```bash
-uv run Agents/Agent5.py
+uv run Agents/Agent5_TokenCount.py
 ```
 *(請確保在專案根目錄下執行此指令)*
 
